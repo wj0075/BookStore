@@ -1,0 +1,8 @@
+body{
+    font-family: "Microsoft Himalaya";
+}
+.nav li:hover{
+    background: lightgray;
+    border-radius: 4px;
+    color: #000;
+}

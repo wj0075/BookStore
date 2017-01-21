@@ -1,0 +1,12 @@
+<div class="col-md-3" ng-repeat="key in book track by $index">
+    <div class="panel panel-info">
+        <div class="panel-heading text-center">{{key.name}}</div>
+        <div class="panel-body">
+            <img ng-src="{{key.src}}" style="width: 200px;height: 250px" alt="">
+        </div>
+        <div class="panel-footer">
+            价格: {{key.price | currency:'￥'}}
+            <a href="#!/detail/{{key.id}}" class="pull-right">详情页</a>
+        </div>
+    </div>
+</div>

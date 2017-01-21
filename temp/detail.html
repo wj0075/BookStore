@@ -1,0 +1,17 @@
+<div class="panel panel-info">
+    <div class="panel-heading text-center">
+       <div ng-show="flag"> {{book.name}}</div>
+        <input type="text" ng-model="book.name" ng-hide="flag">
+    </div>
+    <div class="panel-body text-center">
+        <img ng-src="{{book.src}}" style="width: 200px;height: 250px" alt="">
+    </div>
+    <div class="panel-footer">
+        价格: <span ng-show="flag">{{book.price | currency:'￥'}}</span>
+        <input type="text" ng-model="book.price" ng-hide="flag">
+        <button class="btn btn-danger" ng-show="flag" ng-click="remove()">删除</button>
+        <button class="btn btn-warning" ng-show="flag" ng-click="change(book)">修改</button>
+        <button class="btn btn-danger" ng-hide="flag" ng-click="cancel()">取消</button>
+        <button class="btn btn-warning" ng-hide="flag" ng-click="sure(book)">确认</button>
+    </div>
+</div>

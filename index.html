@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="wjModule">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="public/css/index.css">
+</head>
+<body>
+<div class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand">BookStore</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#!/home">首页</a></li>
+                <li><a href="#!/list">列表页</a></li>
+                <li><a href="#!/add">新增图书</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container" ng-view></div>
+
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="node_modules/angular/angular.min.js"></script>
+<script src="node_modules/angular-resource/angular-resource.min.js"></script>
+<script src="node_modules/angular-route/angular-route.min.js"></script>
+<script>
+    var app = angular.module('wjModule',['ngResource','ngRoute']);
+    app.config(function ($routeProvider) {
+        $routeProvider.when('/home',{
+            templateUrl:'/temp/home.html',
+            controller:'homeCtrl'
+        }).when('/list',{
+            templateUrl:'/temp/list.html',
+            controller:'listCtrl'
+        }).when('/detail/:id',{
+            templateUrl:'/temp/detail.html',
+            controller:'detailCtrl'
+        }).when('/add',{
+            templateUrl:'/temp/add.html',
+            controller:'addCtrl'
+        }).otherwise('/home')
+    });
+    app.factory('$book',function ($resource) {
+        return $resource('/books/:id',null,{
+            update:{
+                method:'PUT'
+            }
+        })
+    });
+    app.controller('homeCtrl',['$scope',function ($scope) {
+        $('#myCarousel').carousel({
+            interval:3000
+        })
+    }]);
+    app.controller('listCtrl',['$scope','$book',function ($scope,$book) {
+        $scope.book = $book.query();
+    }]);
+    app.controller('addCtrl',['$scope','$book','$location',function ($scope,$book,$location) {
+            $scope.add=function () {
+                $book.save($scope.book).$promise.then(function () {
+                    $location.path('/list')
+                })
+            }
+    }]);
+    app.controller('detailCtrl',['$scope','$book','$location','$routeParams',function ($scope,$book,$location,$routeParams) {
+        $scope.flag = true;
+        var id = $routeParams.id;
+        $scope.book = $book.get({id:id});
+        $scope.remove=function () {
+            $book.delete({id:id}).$promise.then(function () {
+                $location.path('/list')
+            })
+        };
+        $scope.change=function (book) {
+            $scope.flag = false;
+            $scope.oldBook = JSON.parse(JSON.stringify(book))
+        };
+        $scope.cancel=function () {
+            $scope.flag=true;
+            $scope.book = $scope.oldBook
+        };
+        $scope.sure=function () {
+            $book.update({id:id},$scope.book).$promise.then(function () {
+                $scope.flag=true;
+            })
+        }
+
+    }])
+</script>
+</body>
+</html>
